@@ -1,6 +1,13 @@
-// JS-Project-3---Build-An-Interactive-Form
+/* JS-Project-3---Build-An-Interactive-Form
 
-// 1. TITLE
+TREEHOUSE TECHDEGREE FULL STACK JAVASCRIPT - PROJECT 3 - BUILD AN INTERACTIVE FORM
+
+What the program does:
+
+It provides interactivity to a web form when registering for a conference. When the form first loads, the first textfield is highlighted. As the user makes selections in the form, parts of it are automatically updated. As the user registers for activities at the conference, the total cost is highlighted below the list. When they select an activity that conflicts with the time of another activity, the conflicting one is grayed out. They can pick different payment options and based on what they select, a different message will appear at the bottom of the page. Finally when they submit the form, if they haven't provided all the necessary information error messages will appear letting them know what they got wrong. */
+
+
+/*==== TITLE ====*/
 const title = document.querySelector('#title');
 const otherTitle = document.querySelector('#other-title');
 // hide 'other title' input first
@@ -17,11 +24,11 @@ function toggleTitle () {
 }
 document.querySelector('#title').addEventListener('change', toggleTitle);
 
-// 2. COLORS
+/*==== COLORS ====*/
 // hide and show color options based on design selection
 function changeColors () {
-  // hide color selector first
   document.querySelector('#colors-js-puns').style.display = '';
+  // show color selector
   const design = document.getElementById('design');
   const colorOptions = document.querySelectorAll('#color option');
   // hide all options
@@ -44,10 +51,12 @@ function changeColors () {
     colorOptions[0].removeAttribute('selected');
   }
 }
+// hide color selector first
 document.querySelector('#colors-js-puns').style.display = 'none';
+
 document.querySelector('#design').addEventListener('change', changeColors);
 
-// 3. ACTIVITIES
+/*==== ACTIVITIES ====*/
 const activities = document.querySelectorAll('.activities input');
 const totalText = document.createElement('span');
 document.querySelector('.activities').appendChild(totalText);
@@ -92,7 +101,7 @@ function checkActivities () {
 
 activities.forEach(el => {el.addEventListener('change', checkActivities)})
 
-// 4. PAYMENT
+/*==== PAYMENT ====*/
 const paymentType = document.querySelector('#payment');
 const ccDetails = document.querySelector('#credit-card');
 document.querySelector('#paypal-info').style.display = 'none';
@@ -121,7 +130,7 @@ function hidePayment() {
 paymentType.addEventListener('change', hidePayment);
 
 
-// 5. FORM VALIDATION
+/*==== FORM VALIDATION ====*/
 
 const mail = document.querySelector('#mail');
 const name = document.querySelector('#name');
@@ -131,9 +140,11 @@ const zip = document.querySelector('#zip');
 const cvv = document.querySelector('#cvv');
 const errorMsg = document.createElement('p');
 errorMsg.id = 'error';
+const zipLabel = document.querySelector('#zipLabel');
+const cvvLabel = document.querySelector('#cvvLabel');
 
 // NAME
-function validateName () {
+function validateName (event) {
   if (!name.validity.valid) {
     event.preventDefault();
     name.style.setProperty('box-shadow', '0 0 0 1px red');
@@ -145,7 +156,7 @@ function validateName () {
   }
 }
 // EMAIL
-function validateEmail() {
+function validateEmail(event) {
   var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   if (re.test(mail.value) == false) {
     event.preventDefault();
@@ -158,7 +169,7 @@ function validateEmail() {
   }
 }
 // ACTIVITIES
-function validateActivities () {
+function validateActivities (event) {
   if (Array.from(activities).filter(el => el.checked).length < 1) {
     event.preventDefault();
     document.querySelector('.activities legend').style.color = 'red';
@@ -168,7 +179,7 @@ function validateActivities () {
   }
 }
 // PAYMENT
-function validatePayment () {
+function validatePayment (event) {
   if (paymentType.value == 'credit card') {
     if (ccNum.value == '') {
       event.preventDefault();
@@ -176,10 +187,10 @@ function validatePayment () {
       ccNum.previousElementSibling.style.color = 'red';
       errorMsg.innerText = 'Please enter a credit card number.';
       ccNum.previousElementSibling.appendChild(errorMsg);
-      zip.classList.add('adjust');
-      cvv.classList.add('adjust');
-      zip.classList.remove('adjustPlus');
-      cvv.classList.remove('adjustPlus');
+      zipLabel.classList.add('adjust');
+      cvvLabel.classList.add('adjust');
+      zipLabel.classList.remove('adjustPlus');
+      cvvLabel.classList.remove('adjustPlus');
     }
     else if (ccNum.value.length < 13 || ccNum.value.length > 16 || isNaN(ccNum.value)) {
       event.preventDefault();
@@ -187,10 +198,10 @@ function validatePayment () {
       ccNum.previousElementSibling.style.color = 'red';
       errorMsg.innerText = 'Please enter a number that is between 13 and 16 digits long.';
       ccNum.previousElementSibling.appendChild(errorMsg);
-      zip.classList.remove('adjust');
-      cvv.classList.remove('adjust');
-      zip.classList.add('adjustPlus');
-      cvv.classList.add('adjustPlus');
+      zipLabel.classList.remove('adjust');
+      cvvLabel.classList.remove('adjust');
+      zipLabel.classList.add('adjustPlus');
+      cvvLabel.classList.add('adjustPlus');
     }
     else {
       ccNum.style.setProperty('box-shadow', '');
@@ -198,10 +209,10 @@ function validatePayment () {
       if (errorMsg) {
         ccNum.previousElementSibling.removeChild(errorMsg);
       }
-      zip.classList.remove('adjust');
-      cvv.classList.remove('adjust');
-      zip.classList.remove('adjustPlus');
-      cvv.classList.remove('adjustPlus');
+      zipLabel.classList.remove('adjust');
+      cvvLabel.classList.remove('adjust');
+      zipLabel.classList.remove('adjustPlus');
+      cvvLabel.classList.remove('adjustPlus');
     }
     if (!zip.validity.valid) {
       event.preventDefault();
@@ -226,13 +237,15 @@ function validatePayment () {
 
 // ALL
 function validate (event) {
-  validateEmail();
-  validateActivities();
-  validateName();
-  validatePayment();
+  validateEmail(event);
+  validateActivities(event);
+  validateName(event);
+  validatePayment(event);
 }
 
-// validate form
+// validate form on submit
 form.addEventListener('submit', validate);
-// additional real-time validation for email
+// real-time validation of email, name, activities
 mail.addEventListener('input', validateEmail);
+name.addEventListener('input', validateName);
+activities.forEach(e => e.addEventListener('change', validateActivities))
