@@ -113,7 +113,17 @@ button:hover {
 	background: #184c62;
 }
 
+#error {
+  font-size: 13px;
+}
 
+.adjust {
+  margin-top: 33px;
+}
+
+.adjustPlus {
+  margin-top: 48px;
+}
 /* =================================
   Page Styles
 ==================================== */
