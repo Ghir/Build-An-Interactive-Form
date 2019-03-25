@@ -2,10 +2,8 @@
 /*==== TITLE ====*/
 const title = document.querySelector('#title');
 const otherTitle = document.querySelector('#other-title');
-// hide 'other title' input first
 otherTitle.style.display = 'none';
 
-// hide and show 'other title' input on user selection
 function toggleTitle () {
   if (title.value == 'other') {
     otherTitle.style.display = '';
@@ -20,14 +18,11 @@ document.querySelector('#title').addEventListener('change', toggleTitle);
 // hide and show color options based on design selection
 function changeColors () {
   document.querySelector('#colors-js-puns').style.display = '';
-  // show color selector
   const design = document.getElementById('design');
   const colorOptions = document.querySelectorAll('#color option');
-  // hide all options
   for (let i=0; i<colorOptions.length; i++) {
     colorOptions[i].style.display = 'none'
   }
-  // show colors matching the selection
   if (design.value == 'js puns') {
     colorOptions[0].style.display = '';
     colorOptions[1].style.display = '';
@@ -79,11 +74,8 @@ function checkActivities () {
       activities[i-2].parentNode.style.color = '#000';
     }
   }
-  // create array of checked items
   const checkedAct = Array.from(activities).filter(el => el.checked);
-  // calculate total price
   let tot = checkedAct.length * 100;
-  // take into account different price of the first item
   if (activities[0].checked) {
     tot += 100;
   }
