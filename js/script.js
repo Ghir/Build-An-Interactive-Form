@@ -1,124 +1,90 @@
-
-/*==== TITLE ====*/
+// TITLE
 const title = document.querySelector('#title');
 const otherTitle = document.querySelector('#other-title');
-otherTitle.style.display = 'none';
+document.querySelector('#title').addEventListener('change', () => {
+  otherTitle.style.display = title.value === 'other' ? 'inline-block' : 'none'
+});
 
-function toggleTitle () {
-  if (title.value == 'other') {
-    otherTitle.style.display = '';
-  }
-  else {
-      otherTitle.style.display = 'none';
-  }
-}
-document.querySelector('#title').addEventListener('change', toggleTitle);
-
-/*==== COLORS ====*/
-// hide and show color options based on design selection
-function changeColors () {
-  document.querySelector('#colors-js-puns').style.display = '';
+// COLORS
+function changeColors() {
+  document.querySelector('#colors-js-puns').style.display = 'block';
   const design = document.getElementById('design');
-  const colorOptions = document.querySelectorAll('#color option');
-  for (let i=0; i<colorOptions.length; i++) {
-    colorOptions[i].style.display = 'none'
-  }
-  if (design.value == 'js puns') {
-    colorOptions[0].style.display = '';
-    colorOptions[1].style.display = '';
-    colorOptions[2].style.display = '';
-    colorOptions[0].setAttribute('selected', '');
-    colorOptions[3].removeAttribute('selected');
-  }
-  else {
-    colorOptions[3].style.display = '';
-    colorOptions[4].style.display = '';
-    colorOptions[5].style.display = '';
-    colorOptions[3].setAttribute('selected','');
-    colorOptions[0].removeAttribute('selected');
+  const punsOptions = document.querySelectorAll('.puns');
+  const heartOptions = document.querySelectorAll('.heart');
+  if (design.value === 'js puns') {
+    heartOptions.forEach(option => option.style.display = 'none');
+    punsOptions.forEach(option => option.style.display = 'block');
+    punsOptions[0].setAttribute('selected', '');
+    heartOptions[0].removeAttribute('selected');
+  } else {
+    punsOptions.forEach(option => option.style.display = 'none');
+    heartOptions.forEach(option => option.style.display = 'block');
+    heartOptions[0].setAttribute('selected', '');
+    punsOptions[0].removeAttribute('selected');
   }
 }
-// hide color selector first
-document.querySelector('#colors-js-puns').style.display = 'none';
-
 document.querySelector('#design').addEventListener('change', changeColors);
 
-/*==== ACTIVITIES ====*/
+// ACTIVITIES
 const activities = document.querySelectorAll('.activities input');
-const totalText = document.createElement('span');
-document.querySelector('.activities').appendChild(totalText);
+const total = document.querySelector('.total');
+activities.forEach((el, i) => {
+  el.addEventListener('change', () => {
+    if (i === 1 || i === 2) {
+      if (el.checked) {
+        activities[i + 2].disabled = true;
+        activities[i + 2].parentNode.style.color = 'grey';
+      } else {
+        activities[i + 2].disabled = false;
+        activities[i + 2].parentNode.style.color = '#000';
+      }
+    } else if (i === 3 || i === 4) {
+      if (el.checked) {
+        activities[i - 2].disabled = true;
+        activities[i - 2].parentNode.style.color = 'grey';
+      } else {
+        activities[i - 2].disabled = false;
+        activities[i - 2].parentNode.style.color = '#000';
+      }
+    }
+    const selected = Array.from(activities).filter(el => el.checked);
+    let cost = selected.length * 100;
+    if (activities[0].checked) {
+      cost += 100;
+    }
+    total.innerText = `Total: $${cost}`;
+  })
+})
 
-function checkActivities () {
-  // disable crashing activities
-  for (let i=1; i < 3; i++) {
-    if (activities[i].checked) {
-      activities[i+2].disabled = true;
-      activities[i+2].parentNode.style.color = 'grey';
-    }
-  }
-  for (let i = 3; i < 5; i++) {
-    if (activities[i].checked) {
-      activities[i-2].disabled = true;
-      activities[i-2].parentNode.style.color = 'grey';
-    }
-  }
-  for (let i=1; i < 3; i++) {
-    if (!activities[i].checked) {
-      activities[i+2].disabled = false;
-      activities[i+2].parentNode.style.color = '#000';
-    }
-  }
-  for (let i = 3; i < 5; i++) {
-    if (!activities[i].checked) {
-      activities[i-2].disabled = false;
-      activities[i-2].parentNode.style.color = '#000';
-    }
-  }
-  const checkedAct = Array.from(activities).filter(el => el.checked);
-  let tot = checkedAct.length * 100;
-  if (activities[0].checked) {
-    tot += 100;
-  }
-  // show total
-  totalText.innerText = `Total: $${tot}`;
-}
-
-activities.forEach(el => {el.addEventListener('change', checkActivities)})
-
-/*==== PAYMENT ====*/
+// PAYMENT
 const paymentType = document.querySelector('#payment');
 const ccDetails = document.querySelector('#credit-card');
-document.querySelector('#paypal-info').style.display = 'none';
-document.querySelector('#bitcoin-info').style.display = 'none';
-
-// hide and show details based on payment selection
+const paypal = document.querySelector('#paypal-info');
+const bitcoin = document.querySelector('#bitcoin-info');
 function hidePayment() {
-  if (paymentType.value == 'paypal') {
+  if (paymentType.value === 'paypal') {
     ccDetails.style.display = 'none';
-    document.querySelector('#bitcoin-info').style.display = 'none';
-    document.querySelector('#paypal-info').style.display = '';
+    bitcoin.style.display = 'none';
+    paypal.style.display = 'block';
   }
-  else if (paymentType.value == 'bitcoin') {
+  else if (paymentType.value === 'bitcoin') {
     ccDetails.style.display = 'none';
-    document.querySelector('#paypal-info').style.display = 'none';
-    document.querySelector('#bitcoin-info').style.display = '';
+    paypal.style.display = 'none';
+    bitcoin.style.display = 'block';
 
   }
-  else if (paymentType.value == 'credit card') {
-    ccDetails.style.display = '';
-    document.querySelector('#paypal-info').style.display = 'none';
-    document.querySelector('#bitcoin-info').style.display = 'none';
+  else if (paymentType.value === 'credit card') {
+    ccDetails.style.display = 'block';
+    paypal.style.display = 'none';
+    bitcoin.style.display = 'none';
   }
 }
-
 paymentType.addEventListener('change', hidePayment);
 
-
-/*==== FORM VALIDATION ====*/
-
+// FORM VALIDATION
 const mail = document.querySelector('#mail');
 const name = document.querySelector('#name');
-const form = document.getElementsByTagName('form')[0];
+const form = document.querySelector('form');
 const ccNum = document.querySelector('#cc-num');
 const zip = document.querySelector('#zip');
 const cvv = document.querySelector('#cvv');
@@ -127,45 +93,38 @@ errorMsg.id = 'error';
 const zipLabel = document.querySelector('#zipLabel');
 const cvvLabel = document.querySelector('#cvvLabel');
 
-// NAME
-function validateName (event) {
+function validateName(event) {
   if (!name.validity.valid) {
     event.preventDefault();
     name.style.setProperty('box-shadow', '0 0 0 1px red');
     name.previousElementSibling.style.color = 'red';
-  }
-  else {
+  } else {
     name.style.setProperty('box-shadow', '');
     name.previousElementSibling.style.color = '';
   }
 }
-// EMAIL
 function validateEmail(event) {
-  var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  if (re.test(mail.value) == false) {
+  const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  if (regex.test(mail.value) === false) {
     event.preventDefault();
     mail.style.setProperty('box-shadow', '0 0 0 1px red');
     mail.previousElementSibling.style.color = 'red';
-  }
-  else {
+  } else {
     mail.style.setProperty('box-shadow', '');
     mail.previousElementSibling.style.color = '';
   }
 }
-// ACTIVITIES
-function validateActivities (event) {
-  if (Array.from(activities).filter(el => el.checked).length < 1) {
+function validateActivities(event) {
+  if (!Array.from(activities).filter(el => el.checked).length) {
     event.preventDefault();
     document.querySelector('.activities legend').style.color = 'red';
-  }
-  else {
+  } else {
     document.querySelector('.activities legend').style.color = '';
   }
 }
-// PAYMENT
-function validatePayment (event) {
-  if (paymentType.value == 'credit card') {
-    if (ccNum.value == '') {
+function validatePayment(event) {
+  if (paymentType.value === 'credit card') {
+    if (ccNum.value === '') {
       event.preventDefault();
       ccNum.style.setProperty('box-shadow', '0 0 0 1px red');
       ccNum.previousElementSibling.style.color = 'red';
@@ -175,8 +134,7 @@ function validatePayment (event) {
       cvvLabel.classList.add('adjust');
       zipLabel.classList.remove('adjustPlus');
       cvvLabel.classList.remove('adjustPlus');
-    }
-    else if (ccNum.value.length < 13 || ccNum.value.length > 16 || isNaN(ccNum.value)) {
+    } else if (ccNum.value.length < 13 || ccNum.value.length > 16 || isNaN(ccNum.value)) {
       event.preventDefault();
       ccNum.style.setProperty('box-shadow', '0 0 0 1px red');
       ccNum.previousElementSibling.style.color = 'red';
@@ -186,8 +144,7 @@ function validatePayment (event) {
       cvvLabel.classList.remove('adjust');
       zipLabel.classList.add('adjustPlus');
       cvvLabel.classList.add('adjustPlus');
-    }
-    else {
+    } else {
       ccNum.style.setProperty('box-shadow', '');
       ccNum.previousElementSibling.style.color = '';
       if (errorMsg) {
@@ -202,8 +159,7 @@ function validatePayment (event) {
       event.preventDefault();
       zip.style.setProperty('box-shadow', '0 0 0 1px red');
       zip.previousElementSibling.style.color = 'red';
-    }
-    else {
+    } else {
       zip.style.setProperty('box-shadow', '');
       zip.previousElementSibling.style.color = '';
     }
@@ -211,25 +167,19 @@ function validatePayment (event) {
       event.preventDefault();
       cvv.style.setProperty('box-shadow', '0 0 0 1px red');
       cvv.previousElementSibling.style.color = 'red';
-    }
-    else {
+    } else {
       cvv.style.setProperty('box-shadow', '');
       cvv.previousElementSibling.style.color = '';
     }
   }
 }
 
-// ALL
-function validate (event) {
+form.addEventListener('submit', () => {
   validateEmail(event);
   validateActivities(event);
   validateName(event);
   validatePayment(event);
-}
-
-// validate form on submit
-form.addEventListener('submit', validate);
-// real-time validation of email, name, activities
+});
 mail.addEventListener('input', validateEmail);
 name.addEventListener('input', validateName);
 activities.forEach(e => e.addEventListener('change', validateActivities))
