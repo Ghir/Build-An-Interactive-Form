@@ -1,6 +1,6 @@
 // TITLE
-const title = document.querySelector('#title');
-const otherTitle = document.querySelector('#other-title');
+const title = document.querySelector('#title'),
+  otherTitle = document.querySelector('#other-title');
 document.querySelector('#title').addEventListener('change', () => {
   otherTitle.style.display = title.value === 'other' ? 'inline-block' : 'none'
 });
@@ -8,9 +8,10 @@ document.querySelector('#title').addEventListener('change', () => {
 // COLORS
 function changeColors() {
   document.querySelector('#colors-js-puns').style.display = 'block';
-  const design = document.getElementById('design');
-  const punsOptions = document.querySelectorAll('.puns');
-  const heartOptions = document.querySelectorAll('.heart');
+  const design = document.getElementById('design'),
+    punsOptions = document.querySelectorAll('.puns'),
+    heartOptions = document.querySelectorAll('.heart');
+
   if (design.value === 'js puns') {
     heartOptions.forEach(option => option.style.display = 'none');
     punsOptions.forEach(option => option.style.display = 'block');
@@ -26,8 +27,9 @@ function changeColors() {
 document.querySelector('#design').addEventListener('change', changeColors);
 
 // ACTIVITIES
-const activities = document.querySelectorAll('.activities input');
-const total = document.querySelector('.total');
+const activities = document.querySelectorAll('.activities input'),
+  total = document.querySelector('.total');
+
 activities.forEach((el, i) => {
   el.addEventListener('change', () => {
     if (i === 1 || i === 2) {
@@ -47,20 +49,23 @@ activities.forEach((el, i) => {
         activities[i - 2].parentNode.style.color = '#000';
       }
     }
+
     const selected = Array.from(activities).filter(el => el.checked);
     let cost = selected.length * 100;
     if (activities[0].checked) {
       cost += 100;
     }
+
     total.innerText = `Total: $${cost}`;
   })
 })
 
 // PAYMENT
-const paymentType = document.querySelector('#payment');
-const ccDetails = document.querySelector('#credit-card');
-const paypal = document.querySelector('#paypal-info');
-const bitcoin = document.querySelector('#bitcoin-info');
+const paymentType = document.querySelector('#payment'),
+  ccDetails = document.querySelector('#credit-card'),
+  paypal = document.querySelector('#paypal-info'),
+  bitcoin = document.querySelector('#bitcoin-info');
+
 function hidePayment() {
   if (paymentType.value === 'paypal') {
     ccDetails.style.display = 'none';
@@ -82,16 +87,16 @@ function hidePayment() {
 paymentType.addEventListener('change', hidePayment);
 
 // FORM VALIDATION
-const mail = document.querySelector('#mail');
-const name = document.querySelector('#name');
-const form = document.querySelector('form');
-const ccNum = document.querySelector('#cc-num');
-const zip = document.querySelector('#zip');
-const cvv = document.querySelector('#cvv');
-const errorMsg = document.createElement('p');
+const mail = document.querySelector('#mail'),
+  name = document.querySelector('#name'),
+  form = document.querySelector('form'),
+  ccNum = document.querySelector('#cc-num'),
+  zip = document.querySelector('#zip'),
+  cvv = document.querySelector('#cvv'),
+  errorMsg = document.createElement('p'),
+  zipLabel = document.querySelector('#zipLabel'),
+  cvvLabel = document.querySelector('#cvvLabel');
 errorMsg.id = 'error';
-const zipLabel = document.querySelector('#zipLabel');
-const cvvLabel = document.querySelector('#cvvLabel');
 
 function validateName(event) {
   if (!name.validity.valid) {
@@ -103,6 +108,7 @@ function validateName(event) {
     name.previousElementSibling.style.color = '';
   }
 }
+
 function validateEmail(event) {
   const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   if (regex.test(mail.value) === false) {
@@ -114,6 +120,7 @@ function validateEmail(event) {
     mail.previousElementSibling.style.color = '';
   }
 }
+
 function validateActivities(event) {
   if (!Array.from(activities).filter(el => el.checked).length) {
     event.preventDefault();
@@ -122,55 +129,57 @@ function validateActivities(event) {
     document.querySelector('.activities legend').style.color = '';
   }
 }
+
 function validatePayment(event) {
-  if (paymentType.value === 'credit card') {
-    if (ccNum.value === '') {
-      event.preventDefault();
-      ccNum.style.setProperty('box-shadow', '0 0 0 1px red');
-      ccNum.previousElementSibling.style.color = 'red';
-      errorMsg.innerText = 'Please enter a credit card number.';
-      ccNum.previousElementSibling.appendChild(errorMsg);
-      zipLabel.classList.add('adjust');
-      cvvLabel.classList.add('adjust');
-      zipLabel.classList.remove('adjustPlus');
-      cvvLabel.classList.remove('adjustPlus');
-    } else if (ccNum.value.length < 13 || ccNum.value.length > 16 || isNaN(ccNum.value)) {
-      event.preventDefault();
-      ccNum.style.setProperty('box-shadow', '0 0 0 1px red');
-      ccNum.previousElementSibling.style.color = 'red';
-      errorMsg.innerText = 'Please enter a number that is between 13 and 16 digits long.';
-      ccNum.previousElementSibling.appendChild(errorMsg);
-      zipLabel.classList.remove('adjust');
-      cvvLabel.classList.remove('adjust');
-      zipLabel.classList.add('adjustPlus');
-      cvvLabel.classList.add('adjustPlus');
-    } else {
-      ccNum.style.setProperty('box-shadow', '');
-      ccNum.previousElementSibling.style.color = '';
-      if (errorMsg) {
-        ccNum.previousElementSibling.removeChild(errorMsg);
-      }
-      zipLabel.classList.remove('adjust');
-      cvvLabel.classList.remove('adjust');
-      zipLabel.classList.remove('adjustPlus');
-      cvvLabel.classList.remove('adjustPlus');
+  if (paymentType.value !== 'credit card') { return; }
+
+  if (!ccNum.value) {
+    event.preventDefault();
+    ccNum.style.setProperty('box-shadow', '0 0 0 1px red');
+    ccNum.previousElementSibling.style.color = 'red';
+    errorMsg.innerText = 'Please enter a credit card number.';
+    ccNum.previousElementSibling.appendChild(errorMsg);
+    zipLabel.classList.add('adjust');
+    cvvLabel.classList.add('adjust');
+    zipLabel.classList.remove('adjustPlus');
+    cvvLabel.classList.remove('adjustPlus');
+  } else if (ccNum.value.length < 13 || ccNum.value.length > 16 || isNaN(ccNum.value)) {
+    event.preventDefault();
+    ccNum.style.setProperty('box-shadow', '0 0 0 1px red');
+    ccNum.previousElementSibling.style.color = 'red';
+    errorMsg.innerText = 'Please enter a number that is between 13 and 16 digits long.';
+    ccNum.previousElementSibling.appendChild(errorMsg);
+    zipLabel.classList.remove('adjust');
+    cvvLabel.classList.remove('adjust');
+    zipLabel.classList.add('adjustPlus');
+    cvvLabel.classList.add('adjustPlus');
+  } else {
+    ccNum.style.setProperty('box-shadow', '');
+    ccNum.previousElementSibling.style.color = '';
+    if (errorMsg) {
+      ccNum.previousElementSibling.removeChild(errorMsg);
     }
-    if (!zip.validity.valid) {
-      event.preventDefault();
-      zip.style.setProperty('box-shadow', '0 0 0 1px red');
-      zip.previousElementSibling.style.color = 'red';
-    } else {
-      zip.style.setProperty('box-shadow', '');
-      zip.previousElementSibling.style.color = '';
-    }
-    if (!cvv.validity.valid) {
-      event.preventDefault();
-      cvv.style.setProperty('box-shadow', '0 0 0 1px red');
-      cvv.previousElementSibling.style.color = 'red';
-    } else {
-      cvv.style.setProperty('box-shadow', '');
-      cvv.previousElementSibling.style.color = '';
-    }
+    zipLabel.classList.remove('adjust');
+    cvvLabel.classList.remove('adjust');
+    zipLabel.classList.remove('adjustPlus');
+    cvvLabel.classList.remove('adjustPlus');
+  }
+
+  if (!zip.validity.valid) {
+    event.preventDefault();
+    zip.style.setProperty('box-shadow', '0 0 0 1px red');
+    zip.previousElementSibling.style.color = 'red';
+  } else {
+    zip.style.setProperty('box-shadow', '');
+    zip.previousElementSibling.style.color = '';
+  }
+  if (!cvv.validity.valid) {
+    event.preventDefault();
+    cvv.style.setProperty('box-shadow', '0 0 0 1px red');
+    cvv.previousElementSibling.style.color = 'red';
+  } else {
+    cvv.style.setProperty('box-shadow', '');
+    cvv.previousElementSibling.style.color = '';
   }
 }
 
