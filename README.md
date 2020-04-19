@@ -1,4 +1,4 @@
-### Build An Interactive Form
+## Build An Interactive Form
 
 Simple exercise to validate a form and dynamically add fields using Vanilla JavaScript.
 
